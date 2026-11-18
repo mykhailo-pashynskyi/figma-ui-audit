@@ -1,4 +1,4 @@
-# figma-audit
+# figma-ui-audit
 
 A Claude Code plugin that audits Figma files for **code-handoff readiness**. It is read-only: it reports what is wrong and where, and with your approval it can rename default-named layers. It changes nothing else.
 
@@ -44,8 +44,8 @@ Set the target when you call the skill, or let it infer from your frame sizes.
 In Claude Code:
 
 ```
-/plugin marketplace add mykhailo-pashynskyi/REPO_NAME
-/plugin install figma-audit@figma-audit
+/plugin marketplace add mykhailo-pashynskyi/figma-ui-audit
+/plugin install figma-ui-audit@figma-ui-audit
 ```
 
 Then reload plugins (`/reload-plugins`) or restart the session.
@@ -59,7 +59,7 @@ Then reload plugins (`/reload-plugins`) or restart the session.
 ## Usage
 
 ```
-/figma-audit <figma-url> [audit|a11y|states|rename] [platform=ios] [device=iphone-duo] [stack=swiftui] [dark=on]
+/figma-ui-audit <figma-url> [audit|a11y|states|rename] [platform=ios] [device=iphone-duo] [stack=swiftui] [dark=on]
 ```
 
 Or in plain words:
@@ -78,9 +78,9 @@ Each category takes the score of its worst failed severity (P0 blocks handoff, P
 ## Layout
 
 ```
-plugins/figma-audit/
+plugins/figma-ui-audit/
 ├── .claude-plugin/plugin.json
-└── skills/figma-audit/
+└── skills/figma-ui-audit/
     ├── SKILL.md                 workflow, modes, profile resolution
     ├── references/              core rules, checklist, accessibility, states, platforms, devices, stacks, rename playbook
     └── scripts/                 read-only scanners and the guarded rename script, run through use_figma

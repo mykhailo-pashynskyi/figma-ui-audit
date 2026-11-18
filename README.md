@@ -1,4 +1,4 @@
-# figma-audit
+# figma-ui-audit
 
 A read-only Figma audit plugin for Claude Code, by [Mykhailo Pashynskyi](https://github.com/mykhailo-pashynskyi).
 
@@ -7,11 +7,11 @@ Audits a Figma file for code-handoff readiness (Variables, Text Styles, Componen
 ## Install
 
 ```
-/plugin marketplace add mykhailo-pashynskyi/REPO_NAME
-/plugin install figma-audit@figma-audit
+/plugin marketplace add mykhailo-pashynskyi/figma-ui-audit
+/plugin install figma-ui-audit@figma-ui-audit
 ```
 
-Full documentation: [plugins/figma-audit/README.md](plugins/figma-audit/README.md)
+Full documentation: [plugins/figma-ui-audit/README.md](plugins/figma-ui-audit/README.md)
 
 ## License
 

@@ -1,5 +1,5 @@
 ---
-name: figma-audit
+name: figma-ui-audit
 description: "Read-only audit of a Figma design file for code-handoff readiness, with optional layer renaming. Checks Variables (color, space, radius, motion), Text Styles, Components and Variants, Auto Layout, layer and frame naming, screen-state coverage (Loading, Empty, Error, Keyboard, Long content, Offline), accessibility per WCAG 2.2 / Apple HIG / Android (contrast of text, buttons, icons, borders and focus rings in every color mode, interactive component states, focus states, target sizes), and platform, device and stack fit (iOS incl. iPhone Duo foldable, Android Material 3, Web; SwiftUI, UIKit, Compose, React, Tailwind, React Native, Flutter). Reports findings with rule IDs, severity, node location and expected value; after approval renames default layers (Frame 1268, Group 5 Copy 2) and screen frames to ScreenName / State. Never edits anything except names. Use whenever the user shares a figma.com link and asks to audit, review, lint, QA, check, clean up or rename layers, check accessibility or contrast, check against iOS/Android/web guidelines, or check a specific device such as iPhone Duo; also for 'перевір макет', 'аудит фігми', 'чи готовий макет до розробки', 'переіменуй шари', 'перевір доступність', 'перевір контраст'."
 license: MIT
 metadata:
