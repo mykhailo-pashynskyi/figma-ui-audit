@@ -114,7 +114,7 @@ figma-ui-audit/
 
 ## Credits
 
-Built on public guidance: [WCAG 2.2](https://www.w3.org/TR/WCAG22/), [Apple Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/), [Material 3](https://m3.material.io) and [Android developer docs](https://developer.android.com/design). Audit structure was informed by [figma-design-lint](https://github.com/tc9011/my-skills), [figma-suite](https://github.com/robukh/figma-suite), [design-system-ops](https://github.com/murphytrueman/design-system-ops) and [figma-console-mcp-skills](https://github.com/southleft/figma-console-mcp-skills). No code was copied from them.
+Built on public guidance: [WCAG 2.2](https://www.w3.org/TR/WCAG22/), [Apple Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/), [Material 3](https://m3.material.io) and [Android developer docs](https://developer.android.com/design).
 
 ## License
 
