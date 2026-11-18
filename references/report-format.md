@@ -55,9 +55,11 @@ Write the report in the user's language. Rule IDs, layer names, variable and sty
 ## Not verified (needs the designer)
 - HAND-03 Font license for "Gilroy" (custom font, app embedding).
 - LAY-09 / LAY-10 Stretch and long-text tests were not run (read-only audit). Run them manually on a duplicate frame.
-- A11Y-02 contrast in Dark mode (scan reads the default mode only).
+- A11Y-18 Text over images and gradients (contrast is reported for visual review, not scored).
+- VAR-16 Binding and alias-chain integrity (run mode `ds` to verify).
 
 ## What next
+- `ds`: design system audit of bindings, alias chains, modes and library provenance (offered once when the file uses variables or libraries).
 - `rename`: N layer, frame and page renames are ready as a dry-run list; nothing else in the file is changed by this plugin.
 ```
 

@@ -13,6 +13,7 @@ By [Mykhailo Pashynskyi](https://github.com/mykhailo-pashynskyi) · MIT
 | `audit` (default) | Runs the full checklist, scores the file, writes a report with a rule ID, severity, node location and expected value for every finding | No |
 | `a11y` | Accessibility only: contrast of text, buttons, icons, input borders and focus rings in every color mode; state coverage; state tokens; target sizes | No |
 | `states` | Which screens miss Loading, Empty, Error, Keyboard, Long content, Offline… | No |
+| `ds` | **Design system audit**: variable bindings, token alias chains, modes, types, library provenance, missing and suspicious bindings, grouped by root cause; proven facts kept apart from suspicions | No |
 | `rename` | Renames default layers (`Frame 1268`, `Group 5 Copy 2`), screen frames (`ScreenName / State`) and near-match pages from a dry-run list you approve | Names only, after approval |
 
 It never creates, deletes, restyles, rebinds or restructures anything, and never touches component, variant or variable names. A rename list is approved in the chat first, dry-run first, and keeps an undo log (`{id, from, to}`).
@@ -27,6 +28,7 @@ It never creates, deletes, restyles, rebinds or restructures anything, and never
 - **Screens and states:** Default, Loading, Empty, Error, Success, Keyboard open, Long content, Scrolled, Offline, with a state matrix per screen.
 - **Platform and device fit:** frame sizes, safe areas, system chrome, navigation patterns.
 - **Accessibility:** text 4.5:1 / large text 3:1; icons, input borders, selection indicators and focus rings 3:1, in every color mode with opacity composited; touch targets (iOS 44 pt, Android 48 dp, web 24 px); meaning not by color alone; focus, pressed, disabled, error and selected states for buttons, inputs, switches, checkboxes, radios, tabs, chips, links and sliders.
+- **Design system (mode `ds`):** every binding in the scope (geometry, fills, strokes, effects, grids, text per range, component properties, hidden objects) is traced through its alias chain per mode; unreadable variables and collections, broken chains, type and mode problems, potential vs confirmed cycles, remote libraries and local tokens that hide external dependencies, probably missed bindings and semantically suspicious tokens, each with confidence and the limits of the check. The skill offers this audit once when your file uses variables or libraries.
 - **Stack readiness:** `codeSyntax` and naming for your stack, plus layout traps that translate badly to code.
 
 ## Profiles
@@ -72,13 +74,14 @@ Start a new session (or reload skills); the skill is then available as `/figma-u
 ## Usage
 
 ```
-/figma-ui-audit <figma-url> [audit|a11y|states|rename] [platform=ios] [device=iphone-duo] [stack=swiftui] [dark=on]
+/figma-ui-audit <figma-url> [audit|a11y|states|ds|rename] [platform=ios] [device=iphone-duo] [stack=swiftui] [dark=on]
 ```
 
 Or in plain words:
 
 - "Audit this Figma file for iOS and SwiftUI: https://www.figma.com/design/…"
 - "Check the accessibility of the Components page, contrast in Dark too."
+- "Run a design system audit on this page: are the bindings and token chains intact?"
 - "Which screens are missing states?"
 - "Rename the default layers on this screen."
 
@@ -94,7 +97,7 @@ Each category takes the score of its worst failed severity (P0 blocks handoff, P
 figma-ui-audit/
 ├── SKILL.md                workflow, modes, profile resolution
 ├── references/             core rules, checklist, accessibility, states, platforms, devices, stacks, rename playbook
-├── scripts/                read-only scanners and the guarded rename script, run through use_figma
+├── scripts/                read-only scanners (file, nodes, accessibility, design system) and the guarded rename script, run through use_figma
 ├── README.md
 ├── CHANGELOG.md
 └── LICENSE
@@ -106,6 +109,7 @@ figma-ui-audit/
 - Contrast is computed from solid fills and variable values per mode. Text over images and gradients is reported for visual review, not scored.
 - Stretch and long-text tests need a canvas change, so a read-only audit marks them as not verified.
 - Third-party device values (iPhone safe-area insets) can lag behind Apple's kit; treat them as values to confirm.
+- `ds` computes values only for each object's current effective mode and verifies that every recorded mode has a value; other mode combinations are not evaluated and no mode is switched. A variable that cannot be read is reported as unresolved with medium confidence, never as deleted. Whether a library is still reachable is checked through the team library listing when Figma allows it, otherwise it is reported as unverified.
 - The scripts were tested against a mocked Figma API and have not been run on a large production file; report problems as issues.
 
 ## Credits

@@ -1,11 +1,11 @@
 ---
 name: figma-ui-audit
-description: "Read-only audit of a Figma design file for code-handoff readiness, with optional layer renaming. Checks Variables (color, space, radius, motion), Text Styles, Components and Variants, Auto Layout, layer and frame naming, screen-state coverage (Loading, Empty, Error, Keyboard, Long content, Offline), accessibility per WCAG 2.2 / Apple HIG / Android (contrast of text, buttons, icons, borders and focus rings in every color mode, interactive component states, focus states, target sizes), and platform, device and stack fit (iOS incl. iPhone Duo foldable, Android Material 3, Web; SwiftUI, UIKit, Compose, React, Tailwind, React Native, Flutter). Reports findings with rule IDs, severity, node location and expected value; after approval renames default layers (Frame 1268, Group 5 Copy 2) and screen frames to ScreenName / State. Never edits anything except names. Use whenever the user shares a figma.com link and asks to audit, review, lint, QA, check, clean up or rename layers, check accessibility or contrast, check against iOS/Android/web guidelines, or check a specific device such as iPhone Duo; also for 'перевір макет', 'аудит фігми', 'чи готовий макет до розробки', 'переіменуй шари', 'перевір доступність', 'перевір контраст'."
+description: "Read-only audit of a Figma file for code-handoff readiness: Variables, Text Styles, Components, Auto Layout, naming, screen states, accessibility (WCAG 2.2: contrast per color mode, focus and interactive states, target sizes) and platform/device/stack fit (iOS incl. iPhone Duo, Android, Web; SwiftUI, Compose, React, Tailwind, Flutter). Also a separate design system audit of variable bindings, alias chains, modes, libraries and suspicious tokens. After approval it renames default layers (Frame 1268) and screens to ScreenName / State; it edits nothing else. Use when the user shares a figma.com link and asks to audit, review, lint, check accessibility or contrast, check iOS/Android/web guidelines, audit the design system or tokens, or rename layers; also for 'перевір макет', 'аудит фігми', 'переіменуй шари', 'аудит дизайн-системи', 'перевір змінні і токени'."
 license: MIT
 metadata:
   author: Mykhailo Pashynskyi
-  version: "1.0.1"
-argument-hint: "<figma-url> [audit|a11y|states|rename] [platform=ios|android|web|cross] [device=<id>] [stack=<id>] [scope=selection|screen|page|file] [dark=on|off]"
+  version: "1.1.0"
+argument-hint: "<figma-url> [audit|a11y|states|ds|rename] [platform=ios|android|web|cross] [device=<id>] [stack=<id>] [scope=selection|screen|page|file] [dark=on|off]"
 ---
 
 # Figma Audit
@@ -19,9 +19,12 @@ This skill is **read-only**, with one exception: after an explicit approval it c
 | `audit` (default) | Full checklist, report with score and verdict, per-rule findings, "Not verified" list | No |
 | `a11y` | Accessibility only: contrast of text, buttons, icons, input borders and focus rings in every color mode; interactive component states (focus, pressed, disabled, error, selected); state tokens in Variables; target sizes; meaning not by color alone | No |
 | `states` | Only the screen-state inventory: which screens miss which states | No |
+| `ds` | **Design system audit** of variable bindings, token alias chains, modes, types, library provenance, missing and suspicious bindings in the chosen scope; findings are grouped by root cause and split into confirmed problems, suspicions and external dependencies | No |
 | `rename` | Runs `audit`, then renames default-named layers, screen frames and near-match pages from a dry-run list you approve | Names only, after approval |
 
 Accessibility always runs as part of `audit`; `a11y` is the focused version. When something is missing (focus states, state variants, tokens), the report says what and where; adding it is the designer's job.
+
+**Offering the design system audit.** `ds` can be called directly, and the skill also proposes it. After an `audit`, `a11y` or `rename` report, offer `ds` once (a single line, not a question loop) when any of these is true: the file has Variables or uses library variables, components or styles (`remote` flags, `VAR-*` findings, `COMP-03` findings); raw values or primitive bindings were found (`VAR-02`, `VAR-06`); state tokens are missing (`VAR-15*`); or the user asked about tokens, themes, libraries or dark mode. Do not offer it for a file with no variables and no libraries. Never run it without the user's yes, since it reads the whole bound-variable graph of the scope.
 
 ## Step 0. Load prerequisites
 
@@ -46,7 +49,7 @@ Inference rules:
 - When the frames match one platform but the user named another, follow the user and report the mismatch as `PLAT-01`.
 - Ask with `AskUserQuestion` at most once, recommended option first, only for an axis that changes the checks. In an unattended run take the default and state it in the report header as `inferred`.
 
-Then read only what the profile needs: [core-rules.md](references/core-rules.md), [audit-checklist.md](references/audit-checklist.md), [accessibility.md](references/accessibility.md), [component-states.md](references/component-states.md), the one platform file, the one device file and the one stack file. Do not load the others. Load [rename-playbook.md](references/rename-playbook.md) only for mode `rename`.
+Then read only what the profile needs: [core-rules.md](references/core-rules.md), [audit-checklist.md](references/audit-checklist.md), [accessibility.md](references/accessibility.md), [component-states.md](references/component-states.md), the one platform file, the one device file and the one stack file. Do not load the others. Load [rename-playbook.md](references/rename-playbook.md) only for mode `rename`, and [design-system-audit.md](references/design-system-audit.md) only for mode `ds`. In mode `ds` the platform, device and stack files are not needed unless the user asks for stack token syntax.
 
 ## Step 2. Determine scope
 
@@ -81,6 +84,17 @@ Script constants per profile (`PROFILE` in `audit-scan.js`; defaults are iOS):
 | cross | iOS and Android lists combined | 48 | 12 | default, pressed, disabled |
 
 `safeInsets` keys are `WIDTHxHEIGHT` with `[top, bottom, left, right]`, from the device file; `{}` for web. In `file-scan.js` set `__DARK_IN_SCOPE__` to `true`/`false` and `__CODE_PLATFORM__` to `WEB`, `ANDROID`, `iOS` or `none` from the stack file.
+
+## Step 3b. Design system audit (mode `ds`)
+
+Follow [design-system-audit.md](references/design-system-audit.md). It is a separate, read-only pass with its own report; it does not use the checklist scoring.
+
+1. Ask once whether an approved library list or token rules exist (collection keys, required bindings). Without them, every deviation is a suspicion, never a violation.
+2. Set the scope (selection, `node-id`, page, or `TARGET_IDS`); hidden content is included by default.
+3. Run [scripts/ds-scan.js](scripts/ds-scan.js) through `use_figma`: one call per page, or per frame group for large pages. Never import variables, never create anything, never switch an object's mode.
+4. Read the result in this order: `scope`, `scale`, `confirmedProblems`, `suspicionsAndRisks`, `externalDependencies`, `provenance`, `modeCoverage`, `limits`. A tripped limit means "check not completed", never "fine".
+5. Write the report in the structure of §14 of the reference to `reports/<file-name>-design-system-<YYYY-MM-DD-HHMM>.md`, with the five scale numbers (unique direct tokens, all reachable tokens, problem root causes, dependent objects, usage records) kept separate.
+6. For anything the script could not decide (a semantic suspicion, an unverified source), say what evidence would settle it. Do not write "was unbound before", "library removed" or "wrong token" without proof or a provided rule.
 
 ## Step 4. Evaluate
 

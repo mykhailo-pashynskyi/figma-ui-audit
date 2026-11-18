@@ -84,6 +84,7 @@ Overall = Σ(category score × weight), rounded. Checks marked Not verified or N
 | VAR-15a | State tokens exist for every state the components use (hover, pressed, focus, disabled, error, selected) | P2 | auto `a11y-scan stateTokens`, `VAR-15a` | designer |
 | VAR-15b | Non-default variants bind to state-named tokens (`…/pressed`), not to the default token with tweaks | P3 | auto `a11y-scan VAR-15b` | designer |
 | VAR-15c | Focus tokens present: `color/focus/ring`, `color/focus/ring-offset`, `stroke/focus`, `space/focus-offset`, effect style `focus/ring` | P2 | auto `a11y-scan focusTokens` | designer |
+| VAR-16 | Bindings resolve and alias chains are intact; no unresolved variables or collections, type mismatches, mode gaps or cycles; external dependencies identified (full method in [design-system-audit.md](design-system-audit.md)) | P1 | not covered by `audit`; run mode `ds` (`ds-scan.js`), otherwise Not verified | designer |
 
 ## TYPE — Typography
 
