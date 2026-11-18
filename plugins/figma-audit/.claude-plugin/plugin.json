@@ -1,0 +1,12 @@
+{
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+  "name": "figma-audit",
+  "version": "1.0.0",
+  "description": "Read-only Figma audit for code-handoff readiness: Variables, Text Styles, Components, Auto Layout, naming, screen states, accessibility (WCAG 2.2, contrast, focus states) and platform/device/stack fit (iOS incl. iPhone Duo, Android, Web). Optionally renames default layers after approval.",
+  "author": {
+    "name": "Mykhailo Pashynskyi",
+    "url": "https://github.com/mykhailo-pashynskyi"
+  },
+  "license": "MIT",
+  "keywords": ["figma", "design-audit", "design-system", "accessibility", "wcag", "ios", "android", "handoff", "layer-naming"]
+}
