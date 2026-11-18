@@ -4,7 +4,7 @@ description: "Read-only audit of a Figma design file for code-handoff readiness,
 license: MIT
 metadata:
   author: Mykhailo Pashynskyi
-  version: "1.0.0"
+  version: "1.0.1"
 argument-hint: "<figma-url> [audit|a11y|states|rename] [platform=ios|android|web|cross] [device=<id>] [stack=<id>] [scope=selection|screen|page|file] [dark=on|off]"
 ---
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1
+
+- Distributed as a plain skill (no plugin or marketplace): the skill sits at the repository root and installs with `npx skills add` or a `git clone` into `~/.claude/skills`.
+
 ## 1.0.0
 
 First release.
